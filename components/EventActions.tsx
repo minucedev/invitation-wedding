@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { WeddingEvent } from "@/lib/events";
-import { googleCalendarUrl, icsDataUri } from "@/lib/calendar";
+import { googleCalendarUrl } from "@/lib/calendar";
 import MapModal from "./MapModal";
 
 const BTN =
@@ -49,21 +49,13 @@ export default function EventActions({ event }: { event: WeddingEvent }) {
         {open && (
           <div className="absolute left-0 top-full mt-2 z-30 w-56 bg-custom-light border border-custom-gold shadow-lg flex flex-col">
             <a
-              className="px-5 py-4 font-label-caps text-label-caps text-primary hover:bg-custom-gold/10 hover:text-custom-burgundy transition-colors border-b border-custom-gold/30"
+              className="px-5 py-4 font-label-caps text-label-caps text-primary hover:bg-custom-gold/10 hover:text-custom-burgundy transition-colors"
               href={googleCalendarUrl(event)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
             >
               GOOGLE CALENDAR
-            </a>
-            <a
-              className="px-5 py-4 font-label-caps text-label-caps text-primary hover:bg-custom-gold/10 hover:text-custom-burgundy transition-colors"
-              href={icsDataUri(event)}
-              download={`${event.id}.ics`}
-              onClick={() => setOpen(false)}
-            >
-              APPLE / OUTLOOK
             </a>
           </div>
         )}
