@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-padding-top: 96px;
+}
+
+/* Custom palette classes ported verbatim from the Stitch export */
+.hairline-b {
+  border-bottom: 0.5px solid #d4af37;
+}
+.hairline-t {
+  border-top: 0.5px solid #d4af37;
+}
+.bg-custom-light {
+  background-color: #fdfbf7;
+}
+.bg-custom-shift {
+  background-color: #f5f3ed;
+}
+.text-custom-burgundy {
+  color: #6a1e25;
+}
+.border-custom-burgundy {
+  border-color: #6a1e25;
+}
+.bg-custom-burgundy {
+  background-color: #6a1e25;
+}
+.text-custom-gold {
+  color: #d4af37;
+}
+.border-custom-gold {
+  border-color: #d4af37;
+}
