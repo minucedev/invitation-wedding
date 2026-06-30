@@ -1,4 +1,5 @@
 import FadeIn from "./FadeIn";
+import StoryImages from "./StoryImages";
 
 export default function Story() {
   return (
@@ -26,18 +27,7 @@ export default function Story() {
           </p>
         </FadeIn>
         <FadeIn className="md:col-span-7 order-1 md:order-2 relative h-[600px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Ảnh cưới tinh tế của cô dâu và chú rể bên bức tường trắng tối giản, ánh sáng tự nhiên dịu nhẹ."
-            className="absolute top-0 right-0 w-3/4 h-[450px] object-cover transition-transform duration-700 ease-out hover:scale-105 hover:z-10"
-            src="/images/story-1.jpg"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Khoảnh khắc nên thơ: nhành lan trắng trong bình vàng bên tấm thiệp cưới có dấu niêm phong vàng, nền ngà ấm áp."
-            className="absolute bottom-0 left-0 w-2/3 h-[400px] object-cover border-4 border-custom-light shadow-2xl transition-transform duration-700 ease-out hover:scale-105 hover:z-10"
-            src="/images/story-2.jpg"
-          />
+          <StoryImages />
         </FadeIn>
       </div>
     </section>

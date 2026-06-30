@@ -6,12 +6,15 @@ import GalleryView, { type GridImage } from "./GalleryView";
 
 const GRID_COUNT = 12;
 
+// Featured in the love-story section instead of the album, so skip them here.
+const EXCLUDE = new Set(["841A1941.jpg", "KHOA1629.jpg"]);
+
 function getGalleryImages(): string[] {
   const dir = path.join(process.cwd(), "public", "images", "gallery");
   try {
     return fs
       .readdirSync(dir)
-      .filter((f) => /\.(jpe?g|png|webp)$/i.test(f))
+      .filter((f) => /\.(jpe?g|png|webp)$/i.test(f) && !EXCLUDE.has(f))
       .sort()
       .map((f) => `/images/gallery/${f}`);
   } catch {

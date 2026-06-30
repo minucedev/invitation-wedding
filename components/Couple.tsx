@@ -1,6 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import FadeIn from "./FadeIn";
+import Lightbox from "./Lightbox";
+
+const COUPLE_PHOTOS = ["/images/groom.jpg", "/images/bride.jpg"];
 
 export default function Couple() {
+  const [index, setIndex] = useState<number | null>(null);
+
   return (
     <section
       className="py-section-gap px-margin-edge bg-surface-container-low relative"
@@ -13,7 +21,12 @@ export default function Couple() {
         <div className="grid md:grid-cols-2 gap-16 md:gap-8">
           {/* Groom */}
           <div className="flex flex-col items-center">
-            <div className="w-72 h-[26rem] md:w-[22rem] md:h-[30rem] overflow-hidden mb-8 relative group scale-x-[-1]">
+            <button
+              type="button"
+              onClick={() => setIndex(0)}
+              aria-label="Xem ảnh"
+              className="w-72 h-[26rem] md:w-[22rem] md:h-[30rem] overflow-hidden mb-8 relative group scale-x-[-1] cursor-zoom-in"
+            >
               <div className="absolute inset-0 border border-custom-gold m-2 pointer-events-none z-10"></div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -21,12 +34,12 @@ export default function Couple() {
                 className="w-full h-full object-cover bg-surface-variant transition-transform duration-700 ease-out group-hover:scale-110"
                 src="/images/groom.jpg"
               />
-            </div>
+            </button>
             <h3 className="font-headline-md text-headline-md text-primary mb-2">
               Lê Văn Tuấn
             </h3>
             <p className="font-label-caps text-label-caps text-custom-burgundy mb-6 tracking-widest">
-              CHÚ RỂ &middot; ÚT NAM
+              ÚT NAM
             </p>
             <div className="font-body-md text-body-md text-on-surface-variant flex flex-col gap-2">
               <span className="uppercase tracking-widest text-[10px] text-custom-gold mb-1">
@@ -37,7 +50,12 @@ export default function Couple() {
           </div>
           {/* Bride */}
           <div className="flex flex-col items-center">
-            <div className="w-72 h-[26rem] md:w-[22rem] md:h-[30rem] overflow-hidden mb-8 relative group">
+            <button
+              type="button"
+              onClick={() => setIndex(1)}
+              aria-label="Xem ảnh"
+              className="w-72 h-[26rem] md:w-[22rem] md:h-[30rem] overflow-hidden mb-8 relative group cursor-zoom-in"
+            >
               <div className="absolute inset-0 border border-custom-gold m-2 pointer-events-none z-10"></div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -45,12 +63,12 @@ export default function Couple() {
                 className="w-full h-full object-cover bg-surface-variant transition-transform duration-700 ease-out group-hover:scale-110"
                 src="/images/bride.jpg"
               />
-            </div>
+            </button>
             <h3 className="font-headline-md text-headline-md text-primary mb-2">
               Nguyễn Thị Diệu Thanh
             </h3>
             <p className="font-label-caps text-label-caps text-custom-burgundy mb-6 tracking-widest">
-              CÔ DÂU &middot; QUÝ NỮ
+              QUÝ NỮ
             </p>
             <div className="font-body-md text-body-md text-on-surface-variant flex flex-col gap-2">
               <span className="uppercase tracking-widest text-[10px] text-custom-gold mb-1">
@@ -61,6 +79,8 @@ export default function Couple() {
           </div>
         </div>
       </FadeIn>
+
+      <Lightbox images={COUPLE_PHOTOS} index={index} setIndex={setIndex} />
     </section>
   );
 }

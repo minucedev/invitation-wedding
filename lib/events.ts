@@ -1,14 +1,15 @@
-// Placeholder event data for the wedding itinerary.
+// Event data for the wedding itinerary, grouped by family side (bride / groom).
 // Times are stored as UTC (Vietnam is UTC+07:00) so calendar links are unambiguous.
-// Replace venue names / addresses with the real details when confirmed.
 
 export type WeddingEvent = {
   id: string;
+  /** Which family hosts this event — drives the two-column itinerary layout */
+  side: "bride" | "groom";
   /** Vietnamese ceremony name shown as the heading */
   title: string;
-  /** Local display time, e.g. "09:00 AM" */
+  /** Local display time, e.g. "09:00 Sáng" */
   displayTime: string;
-  /** Local display date, e.g. "24 DECEMBER 2026" */
+  /** Local display date, e.g. "THỨ BẢY, 18.07.2026" */
   displayDate: string;
   /** Lunar (Âm lịch) date shown under the solar date, e.g. "05 THÁNG 06 NĂM BÍNH NGỌ" */
   lunarDate: string;
@@ -25,9 +26,18 @@ export type WeddingEvent = {
   endUTC: string;
 };
 
+// Nhà trai venue — reused by both groom-side events.
+const NHA_TRAI = {
+  locationName: "Tư Gia Nhà Trai",
+  locationDetail: "29 Nguyễn Trãi, Xã Krông Ana, Tỉnh Đắk Lắk",
+  address: "29 Nguyễn Trãi, Xã Krông Ana, Tỉnh Đắk Lắk, Việt Nam",
+};
+
 export const events: WeddingEvent[] = [
+  // ───────── NHÀ GÁI — 18.07.2026, TP. Huế ─────────
   {
     id: "le-vu-quy",
+    side: "bride",
     title: "Lễ Vu Quy",
     displayTime: "09:00 Sáng",
     displayDate: "THỨ BẢY, 18.07.2026",
@@ -42,7 +52,8 @@ export const events: WeddingEvent[] = [
     endUTC: "20260718T040000Z",
   },
   {
-    id: "tiec-cuoi",
+    id: "tiec-cuoi-nha-gai",
+    side: "bride",
     title: "Tiệc Cưới",
     displayTime: "11:00 Trưa",
     displayDate: "THỨ BẢY, 18.07.2026",
@@ -55,5 +66,35 @@ export const events: WeddingEvent[] = [
     // 11:00 (+07) -> 04:00 UTC, ends 14:00 (+07) -> 07:00 UTC
     startUTC: "20260718T040000Z",
     endUTC: "20260718T070000Z",
+  },
+
+  // ───────── NHÀ TRAI — 24.07.2026, Đắk Lắk ─────────
+  {
+    id: "le-thanh-hon",
+    side: "groom",
+    title: "Lễ Thành Hôn",
+    displayTime: "09:00 Sáng",
+    displayDate: "THỨ SÁU, 24.07.2026",
+    lunarDate: "11 THÁNG 06 NĂM BÍNH NGỌ",
+    description:
+      "Lễ Thành Hôn được cử hành tại tư gia nhà trai, ra mắt họ hàng và đón dâu về nhà chồng trong niềm hân hoan của hai họ.",
+    ...NHA_TRAI,
+    // 09:00 (+07) -> 02:00 UTC, ends 11:00 (+07) -> 04:00 UTC
+    startUTC: "20260724T020000Z",
+    endUTC: "20260724T040000Z",
+  },
+  {
+    id: "tiec-cuoi-nha-trai",
+    side: "groom",
+    title: "Tiệc Cưới",
+    displayTime: "11:00 Trưa",
+    displayDate: "THỨ SÁU, 24.07.2026",
+    lunarDate: "11 THÁNG 06 NĂM BÍNH NGỌ",
+    description:
+      "Buổi tiệc chung vui cùng gia đình nhà trai và bạn bè thân thiết, đón chào nàng dâu mới trong không khí ấm áp và rộn ràng.",
+    ...NHA_TRAI,
+    // 11:00 (+07) -> 04:00 UTC, ends 14:00 (+07) -> 07:00 UTC
+    startUTC: "20260724T040000Z",
+    endUTC: "20260724T070000Z",
   },
 ];

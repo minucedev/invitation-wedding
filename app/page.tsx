@@ -10,10 +10,12 @@ import Footer from "@/components/Footer";
 import PageFade from "@/components/PageFade";
 import MusicPlayer from "@/components/MusicPlayer";
 import WishesToast from "@/components/WishesToast";
+import EnvelopeIntro from "@/components/EnvelopeIntro";
 
 export default function Home() {
   return (
     <PageFade>
+      <EnvelopeIntro />
       <Navbar />
       <main>
         <Hero />

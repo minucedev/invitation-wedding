@@ -12,9 +12,9 @@ export default function Hero() {
           src="/images/hero.jpg"
         />
       </div>
-      <div className="relative z-20 flex flex-col items-center animate-fade-in-up">
+      <div className="relative z-20 flex flex-col items-center animate-fade-in-up mt-[14vh] md:mt-[16vh]">
         <span className="font-label-caps text-label-caps text-white/90 tracking-[0.3em] mb-6">
-          LỄ THÀNH HÔN
+          LỄ VU QUY &amp; THÀNH HÔN
         </span>
         <h1 className="font-display-lg text-display-lg md:text-[80px] text-white mb-8 italic">
           Thanh &amp; Tuấn

@@ -12,7 +12,7 @@ export default function EventActions({ event }: { event: WeddingEvent }) {
   const [mapOpen, setMapOpen] = useState(false);
 
   return (
-    <div className="flex flex-nowrap items-center gap-3">
+    <div className="flex flex-wrap items-center justify-center gap-3 w-full">
       <button className={BTN} onClick={() => setMapOpen(true)}>
         <span className="material-symbols-outlined text-base leading-none">
           place

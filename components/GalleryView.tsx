@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import Lightbox from "./Lightbox";
 
 export type GridImage = { src: string; width: number; height: number };
 
@@ -17,33 +18,6 @@ export default function GalleryView({
   allImages: string[];
 }) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const close = useCallback(() => setLightboxIndex(null), []);
-  const prev = useCallback(
-    () =>
-      setLightboxIndex((i) =>
-        i === null ? i : (i - 1 + allImages.length) % allImages.length
-      ),
-    [allImages.length]
-  );
-  const next = useCallback(
-    () =>
-      setLightboxIndex((i) =>
-        i === null ? i : (i + 1) % allImages.length
-      ),
-    [allImages.length]
-  );
-
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowLeft") prev();
-      else if (e.key === "ArrowRight") next();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [lightboxIndex, close, prev, next]);
 
   return (
     <>
@@ -82,59 +56,11 @@ export default function GalleryView({
         </span>
       </div>
 
-      {lightboxIndex !== null && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
-          onClick={close}
-        >
-          <button
-            className="absolute top-4 right-4 text-white/80 hover:text-white z-10"
-            aria-label="Đóng"
-            onClick={close}
-          >
-            <span className="material-symbols-outlined text-3xl">close</span>
-          </button>
-
-          <button
-            className="absolute left-4 md:left-8 text-white/80 hover:text-white z-10"
-            aria-label="Ảnh trước"
-            onClick={(e) => {
-              e.stopPropagation();
-              prev();
-            }}
-          >
-            <span className="material-symbols-outlined text-4xl">
-              chevron_left
-            </span>
-          </button>
-
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={allImages[lightboxIndex]}
-            alt={`Khoảnh khắc cưới ${lightboxIndex + 1}`}
-            loading="lazy"
-            className="max-h-[85vh] max-w-[90vw] object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-
-          <button
-            className="absolute right-4 md:right-8 text-white/80 hover:text-white z-10"
-            aria-label="Ảnh sau"
-            onClick={(e) => {
-              e.stopPropagation();
-              next();
-            }}
-          >
-            <span className="material-symbols-outlined text-4xl">
-              chevron_right
-            </span>
-          </button>
-
-          <span className="absolute bottom-6 left-1/2 -translate-x-1/2 font-label-caps text-label-caps tracking-widest text-white/80">
-            {lightboxIndex + 1} / {allImages.length}
-          </span>
-        </div>
-      )}
+      <Lightbox
+        images={allImages}
+        index={lightboxIndex}
+        setIndex={setLightboxIndex}
+      />
     </>
   );
 }
