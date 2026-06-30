@@ -20,7 +20,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Thanh & Tuấn — Thiệp Cưới",
   description:
-    "Trân trọng kính mời bạn đến chung vui trong ngày cưới của Thanh & Tuấn — 24.12.2026.",
+    "Trân trọng kính mời bạn đến chung vui trong ngày cưới của Thanh & Tuấn — 18.07.2026.",
 };
 
 export default function RootLayout({

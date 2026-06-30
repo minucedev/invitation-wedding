@@ -200,16 +200,18 @@ export default function Rsvp() {
           </form>
         )}
 
-        <div
-          className="mt-16 pt-8 hairline-t flex flex-col items-center justify-center text-center cursor-pointer group"
-          onClick={() => setWellOpen(true)}
-        >
-          <div className="w-16 h-16 rounded-full border border-custom-gold flex items-center justify-center mb-4 group-hover:bg-custom-gold/10 transition-colors">
-            <span className="material-symbols-outlined text-custom-gold">redeem</span>
-          </div>
-          <span className="font-label-caps text-label-caps tracking-widest text-primary group-hover:text-custom-burgundy transition-colors">
-            HỘP MỪNG CƯỚI
-          </span>
+        <div className="mt-16 pt-8 hairline-t flex flex-col items-center">
+          <button
+            type="button"
+            onClick={() => setWellOpen(true)}
+            aria-label="Mở hộp mừng cưới"
+            className="group relative flex h-16 w-16 items-center justify-center rounded-full border border-custom-gold bg-custom-light transition-all duration-300 hover:bg-custom-burgundy hover:border-custom-burgundy hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            <span className="absolute inset-0 rounded-full border border-custom-gold animate-pulse-slow"></span>
+            <span className="material-symbols-outlined text-custom-gold group-hover:text-white transition-colors">
+              redeem
+            </span>
+          </button>
         </div>
       </FadeIn>
 

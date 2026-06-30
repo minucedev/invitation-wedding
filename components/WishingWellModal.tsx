@@ -49,20 +49,28 @@ export default function WishingWellModal({
             THÔNG TIN CHUYỂN KHOẢN
           </p>
           <p className="font-body-md text-primary font-medium">
-            Ngân hàng: VCB Bank
+            Ngân hàng: Vietcombank (VCB)
           </p>
           <p className="font-body-md text-primary font-medium">
-            Số TK: 123 456 789
+            Số TK: 1015563470
           </p>
           <p className="font-body-md text-primary font-medium mb-4">
-            Chủ TK: NGUYEN VAN TUAN
+            Chủ TK: NGUYEN THI DIEU THANH
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt="Mã QR chuyển khoản mừng cưới"
-            className="w-32 h-32 mx-auto bg-surface-variant"
-            src="/images/qr-placeholder.svg"
+            className="w-44 h-44 mx-auto"
+            src="/images/qr-vietqr.png"
           />
+          <a
+            className="mt-4 inline-flex items-center gap-2 px-5 py-2 border border-custom-gold text-custom-burgundy hover:bg-custom-burgundy hover:text-custom-gold hover:border-custom-gold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-300 font-label-caps text-label-caps cursor-pointer"
+            href="/images/qr-vietqr.png"
+            download="qr-mung-cuoi-thanh-tuan.png"
+          >
+            <span className="material-symbols-outlined text-[18px]">download</span>
+            Tải mã QR
+          </a>
         </div>
       </div>
     </div>

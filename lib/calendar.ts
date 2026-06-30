@@ -1,7 +1,7 @@
 import type { WeddingEvent } from "./events";
 
 const CAL_DETAILS =
-  "Lễ cưới của Thanh & Tuấn — 24.12.2026. Rất hân hạnh được đón tiếp sự hiện diện của bạn.";
+  "Lễ cưới của Thanh & Tuấn — 18.07.2026. Rất hân hạnh được đón tiếp sự hiện diện của bạn.";
 
 /** Google Calendar "add event" template link (opens prefilled new-event form). */
 export function googleCalendarUrl(e: WeddingEvent): string {

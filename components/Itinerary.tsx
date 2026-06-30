@@ -26,6 +26,9 @@ export default function Itinerary() {
               <p className="font-label-caps text-label-caps tracking-widest text-on-surface-variant">
                 {morning.displayDate}
               </p>
+              <p className="font-label-caps text-[10px] tracking-widest text-custom-gold mt-1">
+                {morning.lunarDate}
+              </p>
             </div>
             <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border border-custom-gold bg-custom-light z-10"></div>
             <div className="md:pl-12">
@@ -69,6 +72,9 @@ export default function Itinerary() {
               </h4>
               <p className="font-label-caps text-label-caps tracking-widest text-on-surface-variant">
                 {evening.displayDate}
+              </p>
+              <p className="font-label-caps text-[10px] tracking-widest text-custom-gold mt-1">
+                {evening.lunarDate}
               </p>
             </div>
           </div>

@@ -10,6 +10,8 @@ export type WeddingEvent = {
   displayTime: string;
   /** Local display date, e.g. "24 DECEMBER 2026" */
   displayDate: string;
+  /** Lunar (Âm lịch) date shown under the solar date, e.g. "05 THÁNG 06 NĂM BÍNH NGỌ" */
+  lunarDate: string;
   /** Short description shown under the heading */
   description: string;
   /** Venue name (line 1) */
@@ -25,31 +27,33 @@ export type WeddingEvent = {
 
 export const events: WeddingEvent[] = [
   {
-    id: "le-gia-tien",
-    title: "Lễ Gia Tiên",
+    id: "le-vu-quy",
+    title: "Lễ Vu Quy",
     displayTime: "09:00 Sáng",
-    displayDate: "24 THÁNG 12, 2026",
+    displayDate: "THỨ BẢY, 18.07.2026",
+    lunarDate: "05 THÁNG 06 NĂM BÍNH NGỌ",
     description:
-      "Nghi lễ gia tiên truyền thống, dâng hương kính nhớ tổ tiên và trao gửi lời chúc phúc giữa hai gia đình. Một khoảnh khắc trang nghiêm và ấm áp.",
+      "Nghi lễ Vu Quy truyền thống được cử hành tại tư gia nhà gái, dâng hương kính nhớ tổ tiên và trao gửi lời chúc phúc giữa hai gia đình. Một khoảnh khắc trang nghiêm và ấm áp.",
     locationName: "Tư Gia Nhà Gái",
-    locationDetail: "TP. Hồ Chí Minh",
-    address: "Tư Gia Nhà Gái, TP. Hồ Chí Minh, Việt Nam",
+    locationDetail: "Số 1 Chu Mạnh Trinh, P. Phú Xuân, TP. Huế",
+    address: "Số 1 Chu Mạnh Trinh, Phường Phú Xuân, Thành Phố Huế, Việt Nam",
     // 09:00 (+07) -> 02:00 UTC, ends 11:00 (+07) -> 04:00 UTC
-    startUTC: "20261224T020000Z",
-    endUTC: "20261224T040000Z",
+    startUTC: "20260718T020000Z",
+    endUTC: "20260718T040000Z",
   },
   {
     id: "tiec-cuoi",
     title: "Tiệc Cưới",
-    displayTime: "18:00 Tối",
-    displayDate: "24 THÁNG 12, 2026",
+    displayTime: "11:00 Trưa",
+    displayDate: "THỨ BẢY, 18.07.2026",
+    lunarDate: "05 THÁNG 06 NĂM BÍNH NGỌ",
     description:
-      "Một buổi tối hân hoan với tiệc chiêu đãi và những kỷ niệm vui vầy bên gia đình cùng bạn bè thân thiết.",
-    locationName: "The Grand Lotus Hotel",
-    locationDetail: "Sảnh Tiệc Lớn, Tầng 2",
-    address: "The Grand Lotus Hotel, Sảnh Tiệc Lớn Tầng 2, TP. Hồ Chí Minh, Việt Nam",
-    // 18:00 (+07) -> 11:00 UTC, ends 21:00 (+07) -> 14:00 UTC
-    startUTC: "20261224T110000Z",
-    endUTC: "20261224T140000Z",
+      "Một buổi tiệc hân hoan với tiệc chiêu đãi và những kỷ niệm vui vầy bên gia đình cùng bạn bè thân thiết.",
+    locationName: "Nhà Hàng Tiệc Cưới Thiên Hương",
+    locationDetail: "276 Nguyễn Trãi, P. Phú Xuân, TP. Huế",
+    address: "Nhà hàng tiệc cưới Thiên Hương, 276 Nguyễn Trãi, Phường Phú Xuân, Thành Phố Huế, Việt Nam",
+    // 11:00 (+07) -> 04:00 UTC, ends 14:00 (+07) -> 07:00 UTC
+    startUTC: "20260718T040000Z",
+    endUTC: "20260718T070000Z",
   },
 ];

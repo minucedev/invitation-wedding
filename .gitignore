@@ -29,3 +29,6 @@ next-env.d.ts
 
 # source photos — large originals + full-size backups, keep local only
 /pic
+
+# source photos đã retouch — bản gốc full-size (461MB), giữ local
+/retouch2

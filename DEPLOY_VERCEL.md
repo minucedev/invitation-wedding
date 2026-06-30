@@ -54,9 +54,10 @@ Các file ảnh website đang dùng (phải tồn tại trong `public/images/`):
 - [ ] `story-1.jpg`, `story-2.jpg` — ảnh phần câu chuyện
 - [ ] Thư mục `gallery/` — **đặt tất cả ảnh album vào đây**. Trang tự động đọc mọi ảnh
       (`.jpg/.jpeg/.png/.webp`) trong thư mục này lúc build, không cần sửa code.
-- [ ] QR chuyển khoản trong mục Wishing Well: hiện đang là ảnh mẫu
-      (`qr-placeholder.svg`). Muốn dùng QR thật thì thay file/đường dẫn trong
-      `components/WishingWellModal.tsx` (và sửa số tài khoản, tên ngân hàng cho đúng).
+- [x] QR chuyển khoản trong mục Wishing Well: đã dùng QR thật
+      (`qr-vietqr.png` — Vietcombank, NGUYEN THI DIEU THANH). Muốn đổi tài khoản thì
+      tạo lại QR qua https://img.vietqr.io và sửa thông tin trong
+      `components/WishingWellModal.tsx`.
 
 Tuỳ chọn:
 

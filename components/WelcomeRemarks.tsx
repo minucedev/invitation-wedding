@@ -13,8 +13,8 @@ export default function WelcomeRemarks() {
         <p className="font-display-lg-mobile text-display-lg-mobile text-on-surface-variant leading-relaxed opacity-80">
           &ldquo;Sự hiện diện của bạn là món quà trân quý nhất khi chúng mình mở
           ra chương mới của cuộc đời. Chúng mình mong được sẻ chia niềm vui, nét
-          truyền thống và một buổi tối ấm áp, thanh lịch bên những người thân
-          thương.&rdquo;
+          truyền thống và những khoảnh khắc ấm áp, thanh lịch bên những người
+          thân thương.&rdquo;
         </p>
       </FadeIn>
     </section>
