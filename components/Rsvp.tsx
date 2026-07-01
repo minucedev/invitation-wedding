@@ -205,11 +205,18 @@ export default function Rsvp() {
             type="button"
             onClick={() => setWellOpen(true)}
             aria-label="Mở hộp mừng cưới"
-            className="group relative flex h-16 w-16 items-center justify-center rounded-full border border-custom-gold bg-custom-light transition-all duration-300 hover:bg-custom-burgundy hover:border-custom-burgundy hover:-translate-y-0.5 hover:shadow-lg"
+            className="group flex flex-col items-center outline-none"
           >
-            <span className="absolute inset-0 rounded-full border border-custom-gold animate-pulse-slow"></span>
-            <span className="material-symbols-outlined text-custom-gold group-hover:text-white transition-colors">
-              redeem
+            <span className="relative flex h-16 w-16 items-center justify-center rounded-full border border-custom-gold bg-custom-light transition-all duration-500 group-hover:bg-custom-burgundy group-hover:border-custom-burgundy group-hover:-translate-y-0.5 group-hover:shadow-lg group-focus-visible:ring-2 group-focus-visible:ring-custom-gold group-focus-visible:ring-offset-2">
+              <span className="absolute inset-0 rounded-full border border-custom-gold animate-pulse-slow scale-110 opacity-50"></span>
+              <span className="material-symbols-outlined text-custom-gold group-hover:text-white transition-colors duration-500">
+                redeem
+              </span>
+            </span>
+            <span className="mt-5 flex items-center gap-3 font-label-caps text-label-caps tracking-[0.35em] text-custom-gold transition-colors duration-500 group-hover:text-custom-burgundy">
+              <span className="h-px w-5 bg-custom-gold/50 transition-colors duration-500 group-hover:bg-custom-burgundy/50"></span>
+              QUÀ CƯỚI
+              <span className="h-px w-5 bg-custom-gold/50 transition-colors duration-500 group-hover:bg-custom-burgundy/50"></span>
             </span>
           </button>
         </div>

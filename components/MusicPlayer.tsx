@@ -2,9 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// ⬇️ NHẠC NỀN: file lưu sẵn tại public/audio/wedding.mp3 ("Canon in D Major" —
-// Kevin MacLeod, incompetech.com, CC-BY). Thay file đó để đổi bài, hoặc đổi đường dẫn này.
-const MUSIC_SRC = "/audio/wedding.mp3";
+// ⬇️ NHẠC NỀN: file lưu sẵn tại public/audio/canon-in-d.mp3
+// ("Canon in D / Pachelbel's Canon" — Cello & Piano, bản wedding).
+// Thay file đó để đổi bài, hoặc đổi đường dẫn này.
+const MUSIC_SRC = "/audio/canon-in-d.mp3";
+
+// Âm lượng nền mặc định (0–1). Để nhỏ cho nhẹ nhàng, không lấn tiếng.
+const DEFAULT_VOLUME = 0.25;
 
 /**
  * Floating play/pause control for soft background music.
@@ -21,6 +25,8 @@ export default function MusicPlayer() {
     if (!MUSIC_SRC) return;
     const audio = audioRef.current;
     if (!audio) return;
+
+    audio.volume = DEFAULT_VOLUME;
 
     const start = () => {
       audio

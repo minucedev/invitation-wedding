@@ -5,23 +5,29 @@ import type { WeddingEvent } from "@/lib/events";
 import { googleCalendarUrl } from "@/lib/calendar";
 import MapModal from "./MapModal";
 
-const BTN =
-  "font-label-caps text-label-caps border border-primary px-4 sm:px-5 py-3 inline-flex items-center gap-1.5 whitespace-nowrap hover:text-custom-burgundy hover:border-custom-burgundy transition-colors duration-300";
+// Light "ghost" action: icon + label, no boxy border. The label gets a hairline
+// underline on hover and the whole thing shifts gold — soft, editorial feel.
+const ACTION =
+  "group inline-flex items-center gap-1.5 font-label-caps text-label-caps text-custom-burgundy hover:text-custom-gold transition-colors duration-300";
+const LABEL =
+  "border-b border-transparent pb-0.5 group-hover:border-current transition-colors duration-300";
 
 export default function EventActions({ event }: { event: WeddingEvent }) {
   const [mapOpen, setMapOpen] = useState(false);
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 w-full">
-      <button className={BTN} onClick={() => setMapOpen(true)}>
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+      <button type="button" className={ACTION} onClick={() => setMapOpen(true)}>
         <span className="material-symbols-outlined text-base leading-none">
           place
         </span>
-        XEM BẢN ĐỒ
+        <span className={LABEL}>Bản đồ</span>
       </button>
 
+      <span aria-hidden className="hidden sm:block h-3 w-px bg-custom-gold/40" />
+
       <a
-        className={BTN}
+        className={ACTION}
         href={googleCalendarUrl(event)}
         target="_blank"
         rel="noopener noreferrer"
@@ -29,7 +35,7 @@ export default function EventActions({ event }: { event: WeddingEvent }) {
         <span className="material-symbols-outlined text-base leading-none">
           calendar_add_on
         </span>
-        THÊM VÀO LỊCH
+        <span className={LABEL}>Thêm lịch</span>
       </a>
 
       <MapModal event={event} open={mapOpen} onClose={() => setMapOpen(false)} />

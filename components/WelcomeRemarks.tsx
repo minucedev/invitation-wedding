@@ -11,10 +11,7 @@ export default function WelcomeRemarks() {
           Lời Tri Ân
         </h2>
         <p className="font-display-lg-mobile text-display-lg-mobile text-on-surface-variant leading-relaxed opacity-80">
-          &ldquo;Sự hiện diện của bạn là món quà trân quý nhất khi chúng mình mở
-          ra chương mới của cuộc đời. Chúng mình mong được sẻ chia niềm vui, nét
-          truyền thống và những khoảnh khắc ấm áp, thanh lịch bên những người
-          thân thương.&rdquo;
+          &ldquo;Sự hiện diện và tình cảm của mọi người sẽ là niềm vui thật lớn, là điều khiến ngày trọng đại của chúng mình trở nên trọn vẹn, ấm áp và đáng nhớ hơn bao giờ hết.&rdquo;
         </p>
       </FadeIn>
     </section>
