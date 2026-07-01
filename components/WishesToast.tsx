@@ -5,16 +5,20 @@ import { useEffect, useRef, useState } from "react";
 import type { Wish } from "@/app/api/wishes/route";
 
 const ICONS = ["local_florist", "favorite", "auto_awesome"];
-const ROTATE_MS = 6000;
+const VISIBLE_MS = 24000; // mỗi lời chúc hiển thị ~24s rồi tự ẩn
+const GAP_MS = 4000; // khoảng trống trước khi lời chúc kế tiếp hiện lên
+const PAUSE_RECHECK_MS = 1000; // đang rê chuột đọc → hoãn ẩn, kiểm tra lại sau
 
 /**
  * Reads guest wishes from /api/wishes (backed by the RSVP Google Sheet) and
- * shows them one at a time as a gently appearing, auto-rotating card toast in
- * the bottom-left corner. Pauses on hover; can be dismissed with ×.
+ * shows them one at a time as a gently appearing card toast in the bottom-left
+ * corner. Each wish stays for VISIBLE_MS, fades away, then after a GAP_MS blank
+ * pause the next wish appears. Pauses on hover; can be dismissed with ×.
  */
 export default function WishesToast() {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
   const [hidden, setHidden] = useState(false);
   const paused = useRef(false);
 
@@ -32,12 +36,33 @@ export default function WishesToast() {
   }, []);
 
   useEffect(() => {
-    if (wishes.length <= 1) return;
-    const id = setInterval(() => {
-      if (!paused.current) setIndex((i) => (i + 1) % wishes.length);
-    }, ROTATE_MS);
-    return () => clearInterval(id);
-  }, [wishes.length]);
+    if (wishes.length === 0) return;
+    let hideTimer: ReturnType<typeof setTimeout>;
+    let nextTimer: ReturnType<typeof setTimeout>;
+
+    setVisible(true);
+
+    const scheduleHide = (delay: number) => {
+      hideTimer = setTimeout(() => {
+        // Khách đang rê chuột đọc → hoãn ẩn, kiểm tra lại sau.
+        if (paused.current) {
+          scheduleHide(PAUSE_RECHECK_MS);
+          return;
+        }
+        setVisible(false); // chạy animation exit → thẻ biến mất
+        nextTimer = setTimeout(() => {
+          setIndex((i) => (i + 1) % wishes.length); // để trống GAP_MS rồi hiện lời chúc kế tiếp
+        }, GAP_MS);
+      }, delay);
+    };
+
+    scheduleHide(VISIBLE_MS);
+
+    return () => {
+      clearTimeout(hideTimer);
+      clearTimeout(nextTimer);
+    };
+  }, [index, wishes.length]);
 
   if (hidden || wishes.length === 0) return null;
 
@@ -47,6 +72,7 @@ export default function WishesToast() {
   return (
     <div className="fixed bottom-6 left-6 z-40 w-[calc(100vw-3rem)] max-w-sm pointer-events-none">
       <AnimatePresence mode="wait">
+        {visible && (
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 24, scale: 0.96 }}
@@ -84,6 +110,7 @@ export default function WishesToast() {
             &ldquo;{wish.message}&rdquo;
           </p>
         </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
