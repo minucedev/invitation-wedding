@@ -13,12 +13,12 @@ const EXCLUDE = new Set(["841A1941.jpg", "KHOA1629.jpg"]);
 // instead of the 12-image evenly-spaced grid used on tablet/desktop.
 const MOBILE_GRID = [
   "841A3638.jpg",
-  "841A3779.jpg",
-  "KHOA1409.jpg",
-  "841A2181.jpg",
-  "841A2120.jpg",
+  "841A2206.jpg",
   "841A2773.jpg",
   "KHOA0471.jpg",
+  "KHOA1506.jpg",
+  "841A2377.jpg",
+  "841A3779.jpg",
 ].map((f) => `/images/gallery/${f}`);
 
 function getGalleryImages(): string[] {
