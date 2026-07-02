@@ -68,7 +68,7 @@ export const events: WeddingEvent[] = [
     id: "le-thanh-hon",
     side: "groom",
     title: "Lễ Thành Hôn",
-    displayTime: "09:00 Sáng",
+    displayTime: "10:00 Sáng",
     displayDate: "THỨ SÁU, 24.07.2026",
     lunarDate: "11 THÁNG 06 NĂM BÍNH NGỌ",
     ...NHA_TRAI,
@@ -76,8 +76,8 @@ export const events: WeddingEvent[] = [
     // (display only — `address` from NHA_TRAI still drives the Maps link).
     locationName: undefined,
     locationDetail: "Nguyễn Trãi, Xã Krông Ana, Tỉnh Đắk Lắk",
-    // 09:00 (+07) -> 02:00 UTC, ends 11:00 (+07) -> 04:00 UTC
-    startUTC: "20260724T020000Z",
+    // 10:00 (+07) -> 03:00 UTC, ends 11:00 (+07) -> 04:00 UTC
+    startUTC: "20260724T030000Z",
     endUTC: "20260724T040000Z",
   },
   {
