@@ -9,6 +9,18 @@ const GRID_COUNT = 12;
 // Featured in the love-story section instead of the album, so skip them here.
 const EXCLUDE = new Set(["841A1941.jpg", "KHOA1629.jpg"]);
 
+// On mobile the masonry preview shows only this curated short-list (in order),
+// instead of the 12-image evenly-spaced grid used on tablet/desktop.
+const MOBILE_GRID = [
+  "841A3638.jpg",
+  "841A3779.jpg",
+  "KHOA1409.jpg",
+  "841A2181.jpg",
+  "841A2120.jpg",
+  "841A2773.jpg",
+  "KHOA0471.jpg",
+].map((f) => `/images/gallery/${f}`);
+
 function getGalleryImages(): string[] {
   const dir = path.join(process.cwd(), "public", "images", "gallery");
   try {
@@ -46,6 +58,9 @@ async function withDimensions(src: string): Promise<GridImage> {
 export default async function Gallery() {
   const images = getGalleryImages();
   const gridImages = await Promise.all(pickGrid(images).map(withDimensions));
+  const mobileImages = await Promise.all(
+    MOBILE_GRID.filter((src) => images.includes(src)).map(withDimensions)
+  );
 
   return (
     <section
@@ -56,7 +71,11 @@ export default async function Gallery() {
         <h2 className="font-headline-lg text-headline-lg text-center italic mb-16 text-custom-light">
           Khoảnh Khắc Yêu Thương
         </h2>
-        <GalleryView gridImages={gridImages} allImages={images} />
+        <GalleryView
+          gridImages={gridImages}
+          mobileImages={mobileImages}
+          allImages={images}
+        />
       </FadeIn>
     </section>
   );

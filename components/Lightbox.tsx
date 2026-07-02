@@ -1,6 +1,12 @@
 "use client";
 
-import { AnimatePresence, animate, motion, useMotionValue } from "framer-motion";
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const MAX_ZOOM = 4;
@@ -31,17 +37,7 @@ export default function Lightbox({
   setIndex: (i: number | null) => void;
 }) {
   const close = useCallback(() => setIndex(null), [setIndex]);
-  const prev = useCallback(
-    () =>
-      setIndex(
-        index === null ? null : (index - 1 + images.length) % images.length
-      ),
-    [index, images.length, setIndex]
-  );
-  const next = useCallback(
-    () => setIndex(index === null ? null : (index + 1) % images.length),
-    [index, images.length, setIndex]
-  );
+  const reduceMotion = useReducedMotion();
 
   // Transform của ảnh (scale + pan) điều khiển bằng motion values.
   const scale = useMotionValue(1);
@@ -51,6 +47,10 @@ export default function Lightbox({
 
   const imgRef = useRef<HTMLImageElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
+  // slideDir: hướng trượt cho lần đổi ảnh kế tiếp (0 = mở mới, không trượt).
+  const slideDir = useRef(0);
+  // animating: khoá tránh vuốt/bấm chồng khi đang chuyển cảnh.
+  const animating = useRef(false);
   const gesture = useRef({
     startDist: 0,
     startScale: 1,
@@ -60,6 +60,9 @@ export default function Lightbox({
     downY: 0,
     moved: false,
     lastTap: 0,
+    lastX: 0,
+    lastT: 0,
+    vx: 0,
   });
 
   const resetView = useCallback(() => {
@@ -69,16 +72,59 @@ export default function Lightbox({
     setZoomed(false);
   }, [scale, x, y]);
 
-  // Khi đổi ảnh: reset zoom và chạy hiệu ứng phóng to nhẹ cho mượt.
+  // Điều hướng có hiệu ứng trượt. step = +1 (ảnh sau) / -1 (ảnh trước).
+  const paginate = useCallback(
+    (step: number) => {
+      if (index === null || animating.current || images.length < 2) return;
+      const target = (index + step + images.length) % images.length;
+      slideDir.current = step;
+      if (reduceMotion) {
+        setIndex(target);
+        return;
+      }
+      animating.current = true;
+      animate(x, -step * window.innerWidth, {
+        duration: 0.22,
+        ease: [0.4, 0, 1, 1],
+        onComplete: () => setIndex(target),
+      });
+    },
+    [index, images.length, setIndex, x, reduceMotion]
+  );
+
+  const prev = useCallback(() => paginate(-1), [paginate]);
+  const next = useCallback(() => paginate(1), [paginate]);
+
+  // Khi đổi ảnh: reset zoom; trượt ảnh mới vào (hoặc phóng to nhẹ khi mở mới).
   useEffect(() => {
     if (index === null) return;
-    x.set(0);
+    const dir = slideDir.current;
+    slideDir.current = 0;
     y.set(0);
+    scale.set(1);
     setZoomed(false);
-    scale.set(0.92);
-    const controls = animate(scale, 1, { duration: 0.3, ease: "easeOut" });
+
+    if (dir === 0 || reduceMotion) {
+      // Mở mới: giữ hiệu ứng phóng to nhẹ cho mượt.
+      x.set(0);
+      if (reduceMotion) return;
+      scale.set(0.92);
+      const controls = animate(scale, 1, { duration: 0.3, ease: "easeOut" });
+      return () => controls.stop();
+    }
+
+    // Do vuốt/nút/phím: ảnh mới vào từ phía đối diện chiều trượt.
+    x.set(dir * window.innerWidth);
+    const controls = animate(x, 0, {
+      type: "spring",
+      stiffness: 300,
+      damping: 32,
+      onComplete: () => {
+        animating.current = false;
+      },
+    });
     return () => controls.stop();
-  }, [index, scale, x, y]);
+  }, [index, scale, x, y, reduceMotion]);
 
   useEffect(() => {
     if (index === null) return;
@@ -111,6 +157,9 @@ export default function Lightbox({
       gesture.current.downX = e.clientX;
       gesture.current.downY = e.clientY;
       gesture.current.moved = false;
+      gesture.current.lastX = e.clientX;
+      gesture.current.lastT = e.timeStamp;
+      gesture.current.vx = 0;
     }
   };
 
@@ -147,6 +196,10 @@ export default function Lightbox({
       y.set(py);
     } else {
       // Chưa zoom → kéo ngang để chuyển ảnh (kèm phản hồi trực quan).
+      const dt = e.timeStamp - gesture.current.lastT;
+      if (dt > 0) gesture.current.vx = (e.clientX - gesture.current.lastX) / dt;
+      gesture.current.lastX = e.clientX;
+      gesture.current.lastT = e.timeStamp;
       x.set(dx * 0.9);
     }
   };
@@ -159,46 +212,51 @@ export default function Lightbox({
     // Còn ngón khác đang chạm (vừa nhả 1 ngón của pinch) → chưa xử lý.
     if (pointers.current.size > 0) return;
 
+    // Nếu vừa pinch về ~1 thì coi như reset, không tính vuốt/nháy.
+    if (hadTwo) {
+      if (s <= 1.01) resetView();
+      return;
+    }
+
+    // Chạm nhẹ (không kéo) → phát hiện nháy đúp để bật/tắt zoom (cả 2 trạng thái).
+    if (!gesture.current.moved) {
+      const now = e.timeStamp;
+      if (now - gesture.current.lastTap < 300) {
+        gesture.current.lastTap = 0;
+        if (s > 1.01) {
+          resetView();
+        } else {
+          animate(scale, 2.2, { type: "spring", stiffness: 260, damping: 26 });
+          setZoomed(true);
+        }
+      } else {
+        gesture.current.lastTap = now;
+      }
+      return;
+    }
+
+    // Đã kéo & đang zoom → chốt lại vùng pan hợp lệ, giữ nguyên zoom.
     if (s > 1.01) {
-      // Giữ nguyên trạng thái zoom, chỉ chốt lại vùng pan hợp lệ.
       const { px, py } = clampPan(x.get(), y.get(), s);
       x.set(px);
       y.set(py);
       return;
     }
 
-    // Nếu vừa pinch về ~1 thì coi như reset, không tính vuốt/nháy.
-    if (hadTwo) {
-      resetView();
-      return;
-    }
-
+    // Đã kéo & chưa zoom → vuốt: đủ quãng HOẶC đủ nhanh (flick) thì chuyển ảnh.
     const dx = e.clientX - gesture.current.downX;
-
-    // Vuốt ngang đủ xa → chuyển ảnh.
-    if (images.length > 1 && dx <= -60) {
+    const vx = gesture.current.vx;
+    if (images.length > 1 && (dx <= -60 || vx <= -0.4)) {
       next();
       return;
     }
-    if (images.length > 1 && dx >= 60) {
+    if (images.length > 1 && (dx >= 60 || vx >= 0.4)) {
       prev();
       return;
     }
 
     // Không đủ để vuốt → trả ảnh về giữa.
     animate(x, 0, { type: "spring", stiffness: 300, damping: 30 });
-
-    // Phát hiện nháy đúp (double-tap / double-click) để zoom.
-    if (!gesture.current.moved) {
-      const now = e.timeStamp;
-      if (now - gesture.current.lastTap < 300) {
-        gesture.current.lastTap = 0;
-        animate(scale, 2.2, { type: "spring", stiffness: 260, damping: 26 });
-        setZoomed(true);
-      } else {
-        gesture.current.lastTap = now;
-      }
-    }
   };
 
   const onPointerCancel = (e: React.PointerEvent) => {

@@ -12,33 +12,41 @@ export type GridImage = { src: string; width: number; height: number };
  */
 export default function GalleryView({
   gridImages,
+  mobileImages,
   allImages,
 }: {
   gridImages: GridImage[];
+  mobileImages: GridImage[];
   allImages: string[];
 }) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const renderItem = (img: GridImage) => (
+    <button
+      key={img.src}
+      onClick={() => setLightboxIndex(allImages.indexOf(img.src))}
+      className="block w-full break-inside-avoid overflow-hidden group"
+      aria-label="Xem ảnh"
+    >
+      <Image
+        src={img.src}
+        alt="Khoảnh khắc cưới"
+        width={img.width}
+        height={img.height}
+        sizes="(max-width: 768px) 100vw, 33vw"
+        className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
+      />
+    </button>
+  );
+
   return (
     <>
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 mb-16">
-        {gridImages.map((img) => (
-          <button
-            key={img.src}
-            onClick={() => setLightboxIndex(allImages.indexOf(img.src))}
-            className="block w-full break-inside-avoid overflow-hidden group"
-            aria-label="Xem ảnh"
-          >
-            <Image
-              src={img.src}
-              alt="Khoảnh khắc cưới"
-              width={img.width}
-              height={img.height}
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="w-full h-auto transition-transform duration-700 group-hover:scale-105"
-            />
-          </button>
-        ))}
+      {/* Mobile: curated short-list. Tablet/desktop: full evenly-spaced grid. */}
+      <div className="columns-1 gap-4 space-y-4 mb-16 md:hidden">
+        {mobileImages.map(renderItem)}
+      </div>
+      <div className="hidden md:block md:columns-2 lg:columns-3 gap-4 space-y-4 mb-16">
+        {gridImages.map(renderItem)}
       </div>
 
       <div className="flex flex-col items-center justify-center">

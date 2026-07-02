@@ -2,6 +2,9 @@
 
 import { useEffect } from "react";
 
+const QR_SRC = "/images/qr-vietqr.png";
+const QR_FILENAME = "qr-mung-cuoi-thanh-tuan.png";
+
 export default function WishingWellModal({
   open,
   onClose,
@@ -17,6 +20,27 @@ export default function WishingWellModal({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // Fetch the QR as a blob and trigger a download. Mobile browsers (esp. iOS
+  // Safari) ignore the <a download> attribute and just open the image, so we
+  // build the download from an object URL instead — works on both desktop and
+  // mobile. Falls back to opening the image if fetch fails.
+  const downloadQR = async () => {
+    try {
+      const res = await fetch(QR_SRC);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = QR_FILENAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(QR_SRC, "_blank", "noopener,noreferrer");
+    }
+  };
 
   if (!open) return null;
 
@@ -57,20 +81,28 @@ export default function WishingWellModal({
           <p className="font-body-md text-primary font-medium mb-4">
             Chủ TK: NGUYEN THI DIEU THANH
           </p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Mã QR chuyển khoản mừng cưới"
-            className="w-44 h-44 mx-auto"
-            src="/images/qr-vietqr.png"
-          />
-          <a
+          {/* Tap the QR itself to download too — same action as the button. */}
+          <button
+            type="button"
+            onClick={downloadQR}
+            aria-label="Tải mã QR chuyển khoản"
+            className="group block mx-auto cursor-pointer"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt="Mã QR chuyển khoản mừng cưới"
+              className="w-44 h-44 mx-auto transition-transform duration-300 group-hover:scale-[1.03] group-active:scale-100"
+              src={QR_SRC}
+            />
+          </button>
+          <button
+            type="button"
+            onClick={downloadQR}
             className="mt-4 inline-flex items-center gap-2 px-5 py-2 border border-custom-gold text-custom-burgundy hover:bg-custom-burgundy hover:text-custom-gold hover:border-custom-gold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-300 font-label-caps text-label-caps cursor-pointer"
-            href="/images/qr-vietqr.png"
-            download="qr-mung-cuoi-thanh-tuan.png"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
             Tải mã QR
-          </a>
+          </button>
         </div>
       </div>
     </div>
