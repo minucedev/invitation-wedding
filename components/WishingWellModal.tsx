@@ -21,14 +21,30 @@ export default function WishingWellModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Fetch the QR as a blob and trigger a download. Mobile browsers (esp. iOS
-  // Safari) ignore the <a download> attribute and just open the image, so we
-  // build the download from an object URL instead — works on both desktop and
-  // mobile. Falls back to opening the image if fetch fails.
+  // Save the QR image. iOS Safari can't do a plain <a download> (it just opens
+  // the image), so on mobile we use the native share sheet (Web Share API) which
+  // lets the user save to Photos/Files. Desktop & Android fall back to an
+  // object-URL download; if everything fails we open the image so it's still
+  // reachable. NOTE: revoke is delayed — revoking immediately kills the download
+  // navigation on mobile.
   const downloadQR = async () => {
     try {
       const res = await fetch(QR_SRC);
       const blob = await res.blob();
+      const file = new File([blob], QR_FILENAME, {
+        type: blob.type || "image/png",
+      });
+
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "Mã QR mừng cưới" });
+          return;
+        } catch (err) {
+          // User dismissed the share sheet — don't fall through to a download.
+          if ((err as Error)?.name === "AbortError") return;
+        }
+      }
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -36,7 +52,7 @@ export default function WishingWellModal({
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch {
       window.open(QR_SRC, "_blank", "noopener,noreferrer");
     }
