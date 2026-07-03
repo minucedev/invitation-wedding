@@ -37,8 +37,8 @@ export function validateRsvp(data: unknown): ValidationResult {
   if (fullName.length > 120)
     return { ok: false, error: "Họ và tên quá dài." };
 
-  const email = asString(d.email);
-  if (!EMAIL_RE.test(email))
+  const email = asString(d.email); // optional
+  if (email && !EMAIL_RE.test(email))
     return { ok: false, error: "Email không hợp lệ." };
 
   const attending = asString(d.attending);

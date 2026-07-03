@@ -96,14 +96,13 @@ export default function Rsvp() {
             </div>
             <div className="flex flex-col">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                EMAIL
+                EMAIL <span className="lowercase tracking-normal opacity-60">(tuỳ chọn)</span>
               </label>
               <input
                 className={INPUT}
                 name="email"
                 placeholder="ban@email.com"
                 type="email"
-                required
               />
             </div>
 
