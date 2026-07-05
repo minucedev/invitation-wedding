@@ -3,16 +3,20 @@
 import { useEffect } from "react";
 import type { WeddingEvent } from "@/lib/events";
 import { mapsUrl } from "@/lib/calendar";
+import { getDict, type Locale } from "@/lib/i18n";
 
 export default function MapModal({
   event,
   open,
   onClose,
+  lang,
 }: {
   event: WeddingEvent;
   open: boolean;
   onClose: () => void;
+  lang: Locale;
 }) {
+  const t = getDict(lang).mapModal;
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -39,7 +43,7 @@ export default function MapModal({
       >
         <button
           className="absolute top-4 right-4 text-on-surface-variant hover:text-primary"
-          aria-label="Close"
+          aria-label={t.close}
           onClick={onClose}
         >
           <span className="material-symbols-outlined">close</span>
@@ -68,7 +72,7 @@ export default function MapModal({
           <span className="material-symbols-outlined text-base leading-none">
             open_in_new
           </span>
-          MỞ TRONG GOOGLE MAPS
+          {t.openInMaps}
         </a>
       </div>
     </div>

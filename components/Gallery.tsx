@@ -3,6 +3,7 @@ import path from "path";
 import sharp from "sharp";
 import FadeIn from "./FadeIn";
 import GalleryView, { type GridImage } from "./GalleryView";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const GRID_COUNT = 12;
 
@@ -55,7 +56,8 @@ async function withDimensions(src: string): Promise<GridImage> {
   return { src, width: 800, height: 1000 }; // 4:5 fallback
 }
 
-export default async function Gallery() {
+export default async function Gallery({ lang }: { lang: Locale }) {
+  const t = getDict(lang).gallery;
   const images = getGalleryImages();
   const gridImages = await Promise.all(pickGrid(images).map(withDimensions));
   const mobileImages = await Promise.all(
@@ -69,12 +71,13 @@ export default async function Gallery() {
     >
       <FadeIn className="max-w-container-max mx-auto">
         <h2 className="font-headline-lg text-headline-lg text-center italic mb-16 text-custom-light">
-          Khoảnh Khắc Yêu Thương
+          {t.heading}
         </h2>
         <GalleryView
           gridImages={gridImages}
           mobileImages={mobileImages}
           allImages={images}
+          lang={lang}
         />
       </FadeIn>
     </section>

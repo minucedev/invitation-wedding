@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Lightbox from "./Lightbox";
+import { getDict, type Locale } from "@/lib/i18n";
 
 export type GridImage = { src: string; width: number; height: number };
 
@@ -14,11 +15,14 @@ export default function GalleryView({
   gridImages,
   mobileImages,
   allImages,
+  lang,
 }: {
   gridImages: GridImage[];
   mobileImages: GridImage[];
   allImages: string[];
+  lang: Locale;
 }) {
+  const t = getDict(lang).gallery;
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const renderItem = (img: GridImage) => (
@@ -26,11 +30,11 @@ export default function GalleryView({
       key={img.src}
       onClick={() => setLightboxIndex(allImages.indexOf(img.src))}
       className="block w-full break-inside-avoid overflow-hidden group"
-      aria-label="Xem ảnh"
+      aria-label={t.viewPhoto}
     >
       <Image
         src={img.src}
-        alt="Khoảnh khắc cưới"
+        alt={t.alt}
         width={img.width}
         height={img.height}
         sizes="(max-width: 768px) 100vw, 33vw"
@@ -60,7 +64,7 @@ export default function GalleryView({
           <div className="absolute inset-0 rounded-full border border-custom-gold animate-pulse-slow scale-110 opacity-50"></div>
         </button>
         <span className="mt-6 font-label-caps text-label-caps tracking-widest text-custom-gold">
-          XEM THÊM KHOẢNH KHẮC TÌNH YÊU
+          {t.viewMore}
         </span>
       </div>
 
@@ -68,6 +72,7 @@ export default function GalleryView({
         images={allImages}
         index={lightboxIndex}
         setIndex={setLightboxIndex}
+        lang={lang}
       />
     </>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { getDict, type Locale } from "@/lib/i18n";
 
 type Phase = "cover" | "opening" | "done";
 
@@ -16,7 +17,8 @@ type Phase = "cover" | "opening" | "done";
  * (top flap + bottom/left/right pocket). Only the top flap animates open; the
  * card slides up out of the static pocket.
  */
-export default function EnvelopeIntro() {
+export default function EnvelopeIntro({ lang }: { lang: Locale }) {
+  const t = getDict(lang).envelope;
   const [phase, setPhase] = useState<Phase>("cover");
   const reduce = useReducedMotion();
   const opening = phase === "opening";
@@ -70,7 +72,7 @@ export default function EnvelopeIntro() {
         animate={{ opacity: opening ? 0 : 1, y: opening ? -12 : 0 }}
         transition={{ duration: 0.5 }}
       >
-        Trân trọng kính mời
+        {t.invite}
       </motion.p>
 
       {/* Envelope */}
@@ -103,7 +105,7 @@ export default function EnvelopeIntro() {
             T <span className="text-custom-gold">&amp;</span> T
           </span>
           <span className="font-label-caps text-[10px] tracking-[0.3em] text-custom-gold">
-            THIỆP MỜI
+            {t.cardLabel}
           </span>
         </motion.div>
 
@@ -181,7 +183,7 @@ export default function EnvelopeIntro() {
             type="button"
             onClick={() => setPhase("opening")}
             disabled={opening}
-            aria-label="Mở thiệp mời"
+            aria-label={t.openAria}
             className="relative flex h-[4.6rem] w-[4.6rem] md:h-[5.4rem] md:w-[5.4rem] items-center justify-center overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-custom-gold focus-visible:ring-offset-2"
             style={{
               background:
@@ -235,7 +237,7 @@ export default function EnvelopeIntro() {
             : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
         }
       >
-        CHẠM ĐỂ MỞ
+        {t.tapHint}
       </motion.span>
     </motion.div>
   );

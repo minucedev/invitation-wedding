@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { Wish } from "@/app/api/wishes/route";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const ICONS = ["local_florist", "favorite", "auto_awesome"];
 const VISIBLE_MS = 24000; // mỗi lời chúc hiển thị ~24s rồi tự ẩn
@@ -15,7 +16,8 @@ const PAUSE_RECHECK_MS = 1000; // đang rê chuột đọc → hoãn ẩn, kiể
  * corner. Each wish stays for VISIBLE_MS, fades away, then after a GAP_MS blank
  * pause the next wish appears. Pauses on hover; can be dismissed with ×.
  */
-export default function WishesToast() {
+export default function WishesToast({ lang }: { lang: Locale }) {
+  const t = getDict(lang).wishesToast;
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -85,7 +87,7 @@ export default function WishesToast() {
         >
           <button
             className="absolute top-3 right-3 text-on-surface-variant/60 hover:text-primary transition-colors"
-            aria-label="Đóng"
+            aria-label={t.close}
             onClick={() => setHidden(true)}
           >
             <span className="material-symbols-outlined text-lg leading-none">
@@ -101,7 +103,7 @@ export default function WishesToast() {
             </span>
           </div>
           <span className="font-label-caps text-[10px] tracking-widest text-custom-gold">
-            SỔ LƯU BÚT
+            {t.guestbook}
           </span>
           <h4 className="font-headline-md text-body-lg font-bold text-primary mt-2 mb-3 pr-6">
             {wish.name}

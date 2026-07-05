@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const QR_SRC = "/images/qr-vietqr.png";
 const QR_FILENAME = "qr-mung-cuoi-thanh-tuan.png";
@@ -8,10 +9,13 @@ const QR_FILENAME = "qr-mung-cuoi-thanh-tuan.png";
 export default function WishingWellModal({
   open,
   onClose,
+  lang,
 }: {
   open: boolean;
   onClose: () => void;
+  lang: Locale;
 }) {
+  const t = getDict(lang).wishingWell;
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -37,7 +41,7 @@ export default function WishingWellModal({
 
       if (navigator.canShare?.({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: "Mã QR mừng cưới" });
+          await navigator.share({ files: [file], title: t.shareTitle });
           return;
         } catch (err) {
           // User dismissed the share sheet — don't fall through to a download.
@@ -71,42 +75,40 @@ export default function WishingWellModal({
       >
         <button
           className="absolute top-4 right-4 text-on-surface-variant hover:text-primary"
-          aria-label="Close"
+          aria-label={t.close}
           onClick={onClose}
         >
           <span className="material-symbols-outlined">close</span>
         </button>
         <h3 className="font-headline-md text-headline-md text-primary italic mb-6 text-center">
-          Hộp Mừng Cưới
+          {t.heading}
         </h3>
         <p className="font-body-md text-body-md text-on-surface-variant text-center mb-8">
-          Sự hiện diện của bạn đã là món quà quý giá nhất với chúng mình. Nếu bạn
-          muốn gửi gắm đôi lời chúc phúc, hộp mừng cưới sẽ luôn sẵn sàng trong
-          ngày vui.
+          {t.body}
         </p>
         <div className="bg-surface-container-low p-6 text-center border border-custom-gold/30">
           <p className="font-label-caps text-label-caps mb-2 text-custom-burgundy">
-            THÔNG TIN CHUYỂN KHOẢN
+            {t.transferInfo}
           </p>
           <p className="font-body-md text-primary font-medium">
-            Ngân hàng: Vietcombank (VCB)
+            {t.bank}
           </p>
           <p className="font-body-md text-primary font-medium">
-            Số TK: 1015563470
+            {t.accountNumber}
           </p>
           <p className="font-body-md text-primary font-medium mb-4">
-            Chủ TK: NGUYEN THI DIEU THANH
+            {t.accountName}
           </p>
           {/* Tap the QR itself to download too — same action as the button. */}
           <button
             type="button"
             onClick={downloadQR}
-            aria-label="Tải mã QR chuyển khoản"
+            aria-label={t.qrAria}
             className="group block mx-auto cursor-pointer"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              alt="Mã QR chuyển khoản mừng cưới"
+              alt={t.qrAlt}
               className="w-44 h-44 mx-auto transition-transform duration-300 group-hover:scale-[1.03] group-active:scale-100"
               src={QR_SRC}
             />
@@ -117,7 +119,7 @@ export default function WishingWellModal({
             className="mt-4 inline-flex items-center gap-2 px-5 py-2 border border-custom-gold text-custom-burgundy hover:bg-custom-burgundy hover:text-custom-gold hover:border-custom-gold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-300 font-label-caps text-label-caps cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
-            Tải mã QR
+            {t.downloadQR}
           </button>
         </div>
       </div>

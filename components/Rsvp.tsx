@@ -3,13 +3,15 @@
 import { useState } from "react";
 import FadeIn from "./FadeIn";
 import WishingWellModal from "./WishingWellModal";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const INPUT =
   "border-0 border-b border-custom-gold/50 bg-transparent focus:ring-0 focus:border-custom-burgundy px-0 py-2 font-body-lg text-primary transition-colors";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export default function Rsvp() {
+export default function Rsvp({ lang }: { lang: Locale }) {
+  const t = getDict(lang).rsvp;
   const [wellOpen, setWellOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -44,11 +46,11 @@ export default function Rsvp() {
         setStatus("success");
       } else {
         setStatus("error");
-        setErrorMsg(data.error || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+        setErrorMsg(data.error || t.errorGeneric);
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.");
+      setErrorMsg(t.errorNetwork);
     }
   };
 
@@ -64,7 +66,7 @@ export default function Rsvp() {
         <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-custom-gold"></div>
 
         <h2 className="font-headline-lg text-headline-lg text-center text-primary italic mb-12">
-          Xác Nhận Tham Dự
+          {t.heading}
         </h2>
 
         {status === "success" ? (
@@ -73,35 +75,34 @@ export default function Rsvp() {
               favorite
             </span>
             <p className="font-headline-md text-headline-md text-custom-burgundy italic mb-4">
-              Cảm ơn bạn!
+              {t.successTitle}
             </p>
             <p className="font-body-md text-body-md text-on-surface-variant">
-              Phản hồi của bạn đã được ghi nhận. Hẹn gặp bạn trong ngày vui của
-              chúng mình.
+              {t.successBody}
             </p>
           </div>
         ) : (
           <form className="flex flex-col gap-8" onSubmit={handleSubmit} noValidate>
             <div className="flex flex-col">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                HỌ VÀ TÊN
+                {t.fullNameLabel}
               </label>
               <input
                 className={INPUT}
                 name="fullName"
-                placeholder="Nguyễn Văn A"
+                placeholder={t.fullNamePlaceholder}
                 type="text"
                 required
               />
             </div>
             <div className="flex flex-col">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                EMAIL <span className="lowercase tracking-normal opacity-60">(tuỳ chọn)</span>
+                {t.emailLabel} <span className="lowercase tracking-normal opacity-60">{t.optional}</span>
               </label>
               <input
                 className={INPUT}
                 name="email"
-                placeholder="ban@email.com"
+                placeholder={t.emailPlaceholder}
                 type="email"
               />
             </div>
@@ -118,7 +119,7 @@ export default function Rsvp() {
 
             <div className="flex flex-col gap-4 mt-4">
               <label className="font-label-caps text-label-caps text-on-surface-variant">
-                BẠN CÓ THAM DỰ?
+                {t.attendingLabel}
               </label>
               <div className="flex gap-4">
                 {/* Arbitrary hex values (not the custom-* CSS classes) so the
@@ -132,7 +133,7 @@ export default function Rsvp() {
                     required
                   />
                   <span className="font-body-md text-primary peer-checked:text-[#6A1E25] peer-checked:font-medium">
-                    Hân Hạnh Tham Dự
+                    {t.attendingYes}
                   </span>
                 </label>
                 <label className="flex-1 border border-[#D4AF37]/50 p-4 text-center cursor-pointer transition-all hover:border-[#6A1E25] hover:bg-[#6A1E25]/5 has-[:checked]:border-[#6A1E25] has-[:checked]:bg-[#6A1E25]/10 has-[:checked]:shadow-sm">
@@ -143,27 +144,29 @@ export default function Rsvp() {
                     value="no"
                   />
                   <span className="font-body-md text-primary peer-checked:text-[#6A1E25] peer-checked:font-medium">
-                    Rất Tiếc Vắng Mặt
+                    {t.attendingNo}
                   </span>
                 </label>
               </div>
             </div>
             <div className="flex flex-col mt-4">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                KHÁCH MỜI CỦA
+                {t.guestOfLabel}
               </label>
               <select
                 className={INPUT}
                 name="guestOf"
                 defaultValue="Khách của Cô dâu"
               >
-                <option value="Khách của Cô dâu">Khách của Cô dâu</option>
-                <option value="Khách của Chú rể">Khách của Chú rể</option>
+                {/* Values stay in Vietnamese so the couple's RSVP sheet reads
+                    consistently regardless of which language page was used. */}
+                <option value="Khách của Cô dâu">{t.guestOfBride}</option>
+                <option value="Khách của Chú rể">{t.guestOfGroom}</option>
               </select>
             </div>
             <div className="flex flex-col mt-4">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                SỐ LƯỢNG KHÁCH
+                {t.guestsLabel}
               </label>
               <select className={INPUT} name="guests" defaultValue="1">
                 <option value="1">1</option>
@@ -172,14 +175,14 @@ export default function Rsvp() {
             </div>
             <div className="flex flex-col mt-4">
               <label className="font-label-caps text-label-caps text-on-surface-variant mb-2">
-                LỜI CHÚC <span className="lowercase tracking-normal opacity-60">(tuỳ chọn)</span>
+                {t.messageLabel} <span className="lowercase tracking-normal opacity-60">{t.optional}</span>
               </label>
               <textarea
                 className={`${INPUT} resize-none`}
                 name="message"
                 rows={3}
                 maxLength={1000}
-                placeholder="Gửi đôi lời chúc phúc đến cô dâu chú rể..."
+                placeholder={t.messagePlaceholder}
               />
             </div>
 
@@ -194,7 +197,7 @@ export default function Rsvp() {
               type="submit"
               disabled={submitting}
             >
-              {submitting ? "ĐANG GỬI..." : "GỬI PHẢN HỒI"}
+              {submitting ? t.submitting : t.submitIdle}
             </button>
           </form>
         )}
@@ -203,7 +206,7 @@ export default function Rsvp() {
           <button
             type="button"
             onClick={() => setWellOpen(true)}
-            aria-label="Mở hộp mừng cưới"
+            aria-label={t.giftAria}
             className="group flex flex-col items-center outline-none"
           >
             <span className="relative flex h-16 w-16 items-center justify-center rounded-full border border-custom-gold bg-custom-light transition-all duration-500 group-hover:bg-custom-burgundy group-hover:border-custom-burgundy group-hover:-translate-y-0.5 group-hover:shadow-lg group-focus-visible:ring-2 group-focus-visible:ring-custom-gold group-focus-visible:ring-offset-2">
@@ -214,14 +217,14 @@ export default function Rsvp() {
             </span>
             <span className="mt-5 flex items-center gap-3 font-label-caps text-label-caps tracking-[0.35em] text-custom-gold transition-colors duration-500 group-hover:text-custom-burgundy">
               <span className="h-px w-5 bg-custom-gold/50 transition-colors duration-500 group-hover:bg-custom-burgundy/50"></span>
-              QUÀ CƯỚI
+              {t.giftButton}
               <span className="h-px w-5 bg-custom-gold/50 transition-colors duration-500 group-hover:bg-custom-burgundy/50"></span>
             </span>
           </button>
         </div>
       </FadeIn>
 
-      <WishingWellModal open={wellOpen} onClose={() => setWellOpen(false)} />
+      <WishingWellModal open={wellOpen} onClose={() => setWellOpen(false)} lang={lang} />
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getDict, type Locale } from "@/lib/i18n";
 
 // ⬇️ NHẠC NỀN: file lưu sẵn tại public/audio/canon-in-d.mp3
 // ("Canon in D / Pachelbel's Canon" — Cello & Piano, bản wedding).
@@ -17,7 +18,8 @@ const DEFAULT_VOLUME = 0.25;
  * (click / scroll / tap / key) — which feels like autoplay.
  * Renders nothing until a track URL is provided in MUSIC_SRC.
  */
-export default function MusicPlayer() {
+export default function MusicPlayer({ lang }: { lang: Locale }) {
+  const t = getDict(lang).musicPlayer;
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -79,7 +81,7 @@ export default function MusicPlayer() {
       <audio ref={audioRef} src={MUSIC_SRC} loop preload="auto" />
       <button
         onClick={toggle}
-        aria-label={playing ? "Tắt nhạc nền" : "Bật nhạc nền"}
+        aria-label={playing ? t.pause : t.play}
         aria-pressed={playing}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-custom-light/90 backdrop-blur-md border border-custom-gold shadow-lg flex items-center justify-center text-custom-burgundy hover:bg-custom-gold/10 transition-colors duration-300"
       >

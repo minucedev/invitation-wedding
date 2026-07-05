@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { WeddingEvent } from "@/lib/events";
 import { googleCalendarUrl } from "@/lib/calendar";
 import MapModal from "./MapModal";
+import { getDict, type Locale } from "@/lib/i18n";
 
 // Light "ghost" action: icon + label, no boxy border. The label gets a hairline
 // underline on hover and the whole thing shifts gold — soft, editorial feel.
@@ -12,7 +13,14 @@ const ACTION =
 const LABEL =
   "border-b border-transparent pb-0.5 group-hover:border-current transition-colors duration-300";
 
-export default function EventActions({ event }: { event: WeddingEvent }) {
+export default function EventActions({
+  event,
+  lang,
+}: {
+  event: WeddingEvent;
+  lang: Locale;
+}) {
+  const t = getDict(lang).eventActions;
   const [mapOpen, setMapOpen] = useState(false);
 
   return (
@@ -21,7 +29,7 @@ export default function EventActions({ event }: { event: WeddingEvent }) {
         <span className="material-symbols-outlined text-base leading-none">
           place
         </span>
-        <span className={LABEL}>Bản đồ</span>
+        <span className={LABEL}>{t.map}</span>
       </button>
 
       <span aria-hidden className="hidden sm:block h-3 w-px bg-custom-gold/40" />
@@ -35,10 +43,15 @@ export default function EventActions({ event }: { event: WeddingEvent }) {
         <span className="material-symbols-outlined text-base leading-none">
           calendar_add_on
         </span>
-        <span className={LABEL}>Thêm lịch</span>
+        <span className={LABEL}>{t.addCalendar}</span>
       </a>
 
-      <MapModal event={event} open={mapOpen} onClose={() => setMapOpen(false)} />
+      <MapModal
+        event={event}
+        open={mapOpen}
+        onClose={() => setMapOpen(false)}
+        lang={lang}
+      />
     </div>
   );
 }

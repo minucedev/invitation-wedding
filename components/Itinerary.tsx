@@ -3,10 +3,8 @@
 import { useState } from "react";
 import FadeIn from "./FadeIn";
 import EventActions from "./EventActions";
-import { events, type WeddingEvent } from "@/lib/events";
-
-const brideEvents = events.filter((e) => e.side === "bride");
-const groomEvents = events.filter((e) => e.side === "groom");
+import { getEvents, type WeddingEvent } from "@/lib/events";
+import { getDict, type Locale } from "@/lib/i18n";
 
 type Side = WeddingEvent["side"];
 
@@ -29,10 +27,12 @@ function Ornament({ className = "" }: { className?: string }) {
 function FamilyTimeline({
   label,
   sideEvents,
+  lang,
   className = "",
 }: {
   label: string;
   sideEvents: WeddingEvent[];
+  lang: Locale;
   className?: string;
 }) {
   const first = sideEvents[0];
@@ -91,7 +91,7 @@ function FamilyTimeline({
                 {event.locationDetail}
               </p>
 
-              <EventActions event={event} />
+              <EventActions event={event} lang={lang} />
             </div>
           );
         })}
@@ -100,7 +100,11 @@ function FamilyTimeline({
   );
 }
 
-export default function Itinerary() {
+export default function Itinerary({ lang }: { lang: Locale }) {
+  const t = getDict(lang).itinerary;
+  const events = getEvents(lang);
+  const brideEvents = events.filter((e) => e.side === "bride");
+  const groomEvents = events.filter((e) => e.side === "groom");
   const [active, setActive] = useState<Side>("bride");
 
   // On mobile only the active side shows (toggled below); on md+ both show.
@@ -121,7 +125,7 @@ export default function Itinerary() {
     >
       <FadeIn>
         <h2 className="font-headline-lg text-headline-lg text-center text-primary italic mb-5">
-          Chương Trình
+          {t.heading}
         </h2>
         <Ornament className="mb-14" />
 
@@ -134,7 +138,7 @@ export default function Itinerary() {
               className={tabClass("bride")}
               aria-pressed={active === "bride"}
             >
-              Nhà Gái
+              {t.brideSide}
             </button>
             <button
               type="button"
@@ -142,20 +146,22 @@ export default function Itinerary() {
               className={tabClass("groom")}
               aria-pressed={active === "groom"}
             >
-              Nhà Trai
+              {t.groomSide}
             </button>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-x-16 lg:gap-x-24 max-w-4xl mx-auto">
           <FamilyTimeline
-            label="Nhà Gái"
+            label={t.brideSide}
             sideEvents={brideEvents}
+            lang={lang}
             className={show("bride")}
           />
           <FamilyTimeline
-            label="Nhà Trai"
+            label={t.groomSide}
             sideEvents={groomEvents}
+            lang={lang}
             className={show("groom")}
           />
         </div>

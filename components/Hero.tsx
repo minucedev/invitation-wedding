@@ -1,6 +1,8 @@
 import Countdown from "./Countdown";
+import { getDict, type Locale } from "@/lib/i18n";
 
-export default function Hero() {
+export default function Hero({ lang }: { lang: Locale }) {
+  const t = getDict(lang).hero;
   return (
     <section className="relative h-screen w-full flex flex-col justify-center items-center text-center px-4 overflow-hidden">
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -14,16 +16,16 @@ export default function Hero() {
       </div>
       <div className="relative z-20 flex flex-col items-center animate-fade-in-up mt-[14vh] md:mt-[16vh]">
         <span className="font-label-caps text-label-caps text-white/90 tracking-[0.3em] mb-6">
-          LỄ VU QUY &amp; THÀNH HÔN
+          {t.kicker}
         </span>
         <h1 className="font-display-lg text-display-lg md:text-[80px] text-white mb-8 italic">
-          Thanh &amp; Tuấn
+          {t.names}
         </h1>
-        <Countdown />
+        <Countdown lang={lang} />
       </div>
       <div className="absolute bottom-12 z-20 flex flex-col items-center gap-4">
         <span className="font-label-caps text-[10px] text-white/70 tracking-[0.3em]">
-          KÉO XUỐNG
+          {t.scrollDown}
         </span>
         <div className="w-[1px] h-12 bg-custom-gold animate-pulse-slow"></div>
       </div>

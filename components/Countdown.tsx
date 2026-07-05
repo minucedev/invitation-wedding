@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { events } from "@/lib/events";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const DAY = 86_400_000;
@@ -110,12 +111,8 @@ function computePhase(now: number): Phase {
   return { kind: "after", daysSince: Math.max(1, Math.floor((now - DAY2_START) / DAY)) };
 }
 
-const UNITS = [
-  { key: "days", label: "Ngày" },
-  { key: "hours", label: "Giờ" },
-  { key: "minutes", label: "Phút" },
-  { key: "seconds", label: "Giây" },
-] as const;
+const UNIT_KEYS = ["days", "hours", "minutes", "seconds"] as const;
+type UnitLabels = Record<(typeof UNIT_KEYS)[number], string>;
 
 // Cho phép xem trước từng mốc thời gian khi QA: ?preview=2026-07-18T10:00:00
 // Trả về độ lệch (ms) so với thời gian thật; 0 nếu không có/không hợp lệ.
@@ -127,7 +124,8 @@ function previewOffset(): number {
   return Number.isFinite(t) ? t - Date.now() : 0;
 }
 
-export default function Countdown() {
+export default function Countdown({ lang }: { lang: Locale }) {
+  const t = getDict(lang).countdown;
   // null until mounted so SSR and first client render match (no Date.now() on server).
   const [phase, setPhase] = useState<Phase | null>(null);
 
@@ -144,7 +142,7 @@ export default function Countdown() {
     return (
       <div className="flex flex-col items-center gap-5">
         <DateRow date={DATE_1} />
-        <ClockRow timeLeft={null} />
+        <ClockRow timeLeft={null} units={t.units} />
       </div>
     );
   }
@@ -153,10 +151,10 @@ export default function Countdown() {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <p className="font-display-lg italic text-white text-3xl md:text-5xl tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-          Hôm nay là ngày trọng đại! 🤍
+          {t.celebrateTitle}
         </p>
         <p className="font-label-caps text-white/85 tracking-[0.3em] text-[11px] md:text-sm">
-          CHÚC MỪNG NGÀY CHUNG ĐÔI THANH &amp; TUẤN
+          {t.celebrateSubtitle}
         </p>
       </div>
     );
@@ -166,13 +164,13 @@ export default function Countdown() {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <p className="font-display-lg italic text-white text-2xl md:text-4xl tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-          Chúng mình đã chính thức về chung một nhà 🤍
+          {t.afterTitle}
         </p>
         <p className="font-label-caps text-custom-gold tracking-[0.3em] text-[11px] md:text-sm">
-          ĐÃ QUA {phase.daysSince} NGÀY KỂ TỪ NGÀY TRỌNG ĐẠI
+          {t.afterSubtitle.replace("{n}", String(phase.daysSince))}
         </p>
         <p className="font-body text-white/80 text-sm md:text-base italic max-w-md">
-          Cảm ơn mọi người đã đến chung vui cùng chúng mình.
+          {t.afterThanks}
         </p>
       </div>
     );
@@ -182,7 +180,7 @@ export default function Countdown() {
   return (
     <div className="flex flex-col items-center gap-5">
       <DateRow date={phase.date} />
-      <ClockRow timeLeft={phase.timeLeft} />
+      <ClockRow timeLeft={phase.timeLeft} units={t.units} />
     </div>
   );
 }
@@ -199,10 +197,17 @@ function DateRow({ date }: { date: DateParts }) {
   );
 }
 
-function ClockRow({ timeLeft }: { timeLeft: TimeLeft | null }) {
+function ClockRow({
+  timeLeft,
+  units,
+}: {
+  timeLeft: TimeLeft | null;
+  units: UnitLabels;
+}) {
   return (
     <div className="flex items-start gap-3 md:gap-5">
-      {UNITS.map(({ key, label }) => {
+      {UNIT_KEYS.map((key) => {
+        const label = units[key];
         const value = timeLeft ? timeLeft[key] : null;
         const display =
           value === null || !Number.isFinite(value)

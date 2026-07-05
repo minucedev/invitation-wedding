@@ -8,6 +8,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getDict, type Locale } from "@/lib/i18n";
 
 const MAX_ZOOM = 4;
 const clamp = (v: number, min: number, max: number) =>
@@ -31,11 +32,14 @@ export default function Lightbox({
   images,
   index,
   setIndex,
+  lang,
 }: {
   images: string[];
   index: number | null;
   setIndex: (i: number | null) => void;
+  lang: Locale;
 }) {
+  const t = getDict(lang).lightbox;
   const close = useCallback(() => setIndex(null), [setIndex]);
   const reduceMotion = useReducedMotion();
 
@@ -277,7 +281,7 @@ export default function Lightbox({
         >
           <button
             className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 active:scale-95"
-            aria-label="Đóng"
+            aria-label={t.close}
             onClick={close}
           >
             <span className="material-symbols-outlined text-2xl">close</span>
@@ -286,7 +290,7 @@ export default function Lightbox({
           {images.length > 1 && (
             <button
               className="absolute left-2 md:left-8 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 active:scale-95 md:h-14 md:w-14"
-              aria-label="Ảnh trước"
+              aria-label={t.prev}
               onClick={(e) => {
                 e.stopPropagation();
                 prev();
@@ -302,7 +306,7 @@ export default function Lightbox({
           <motion.img
             ref={imgRef}
             src={images[index]}
-            alt={`Khoảnh khắc cưới ${index + 1}`}
+            alt={t.alt.replace("{n}", String(index + 1))}
             loading="lazy"
             draggable={false}
             className={`max-h-[85vh] max-w-[90vw] touch-none select-none object-contain ${
@@ -322,7 +326,7 @@ export default function Lightbox({
           {images.length > 1 && (
             <button
               className="absolute right-2 md:right-8 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 active:scale-95 md:h-14 md:w-14"
-              aria-label="Ảnh sau"
+              aria-label={t.next}
               onClick={(e) => {
                 e.stopPropagation();
                 next();

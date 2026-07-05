@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getDict, type Locale } from "@/lib/i18n";
 
-const NAV_LINKS = [
-  { href: "#story", label: "Chuyện Tình" },
-  { href: "#profile", label: "Dâu & Rể" },
-  { href: "#events", label: "Sự Kiện" },
-  { href: "#album", label: "Khoảnh Khắc" },
-  { href: "#welcome", label: "Lời Ngỏ" },
-];
+const NAV_HREFS = ["#story", "#profile", "#events", "#album", "#welcome"];
 
-const SECTION_IDS = [...NAV_LINKS.map((l) => l.href.slice(1)), "rsvp"];
+const SECTION_IDS = [...NAV_HREFS.map((h) => h.slice(1)), "rsvp"];
 
-export default function Navbar() {
+export default function Navbar({ lang }: { lang: Locale }) {
+  const t = getDict(lang).nav;
+  const NAV_LINKS = t.links;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState("");
@@ -105,14 +102,14 @@ export default function Navbar() {
             }`}
             href="#rsvp"
           >
-            Xác Nhận
+            {t.rsvp}
           </a>
         </div>
         <button
           className={`md:hidden transition-colors duration-300 ${
             scrolled ? "text-primary" : "text-white"
           }`}
-          aria-label="Toggle menu"
+          aria-label={t.toggleMenu}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
