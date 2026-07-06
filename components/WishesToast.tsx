@@ -6,9 +6,10 @@ import type { Wish } from "@/app/api/wishes/route";
 import { getDict, type Locale } from "@/lib/i18n";
 
 const ICONS = ["local_florist", "favorite", "auto_awesome"];
-const VISIBLE_MS = 24000; // mỗi lời chúc hiển thị ~24s rồi tự ẩn
-const GAP_MS = 4000; // khoảng trống trước khi lời chúc kế tiếp hiện lên
+const VISIBLE_MS = 8000; // mỗi lời chúc hiển thị ~8s rồi tự ẩn
+const GAP_MS = 2000; // khoảng trống trước khi lời chúc kế tiếp hiện lên
 const PAUSE_RECHECK_MS = 1000; // đang rê chuột đọc → hoãn ẩn, kiểm tra lại sau
+const POLL_MS = 30000; // định kỳ tải lại /api/wishes để trang đang mở bắt kịp Sheet
 
 /**
  * Reads guest wishes from /api/wishes (backed by the RSVP Google Sheet) and
@@ -26,14 +27,24 @@ export default function WishesToast({ lang }: { lang: Locale }) {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/wishes")
-      .then((r) => r.json())
-      .then((data: { wishes?: Wish[] }) => {
-        if (active && Array.isArray(data.wishes)) setWishes(data.wishes);
-      })
-      .catch(() => {});
+
+    const loadWishes = () => {
+      fetch("/api/wishes")
+        .then((r) => r.json())
+        .then((data: { wishes?: Wish[] }) => {
+          if (!active || !Array.isArray(data.wishes)) return;
+          const next = data.wishes;
+          setWishes(next);
+          setIndex((i) => (i < next.length ? i : 0)); // kẹp index vào mảng mới
+        })
+        .catch(() => {});
+    };
+
+    loadWishes();
+    const id = setInterval(loadWishes, POLL_MS);
     return () => {
       active = false;
+      clearInterval(id);
     };
   }, []);
 
@@ -68,7 +79,7 @@ export default function WishesToast({ lang }: { lang: Locale }) {
 
   if (hidden || wishes.length === 0) return null;
 
-  const wish = wishes[index];
+  const wish = wishes[index] ?? wishes[0]; // guard giữa hai lần cập nhật poll
   const icon = ICONS[index % ICONS.length];
 
   return (
@@ -108,7 +119,7 @@ export default function WishesToast({ lang }: { lang: Locale }) {
           <h4 className="font-headline-md text-body-lg font-bold text-primary mt-2 mb-3 pr-6">
             {wish.name}
           </h4>
-          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed italic">
+          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed italic whitespace-pre-line">
             &ldquo;{wish.message}&rdquo;
           </p>
         </motion.div>

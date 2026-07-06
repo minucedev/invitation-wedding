@@ -46,7 +46,7 @@ export async function GET() {
 
   try {
     const url = `${webhookUrl}?token=${encodeURIComponent(secret)}`;
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const res = await fetch(url, { next: { revalidate: 15 } });
     const data = (await res.json().catch(() => ({}))) as {
       ok?: boolean;
       wishes?: unknown;
