@@ -118,8 +118,9 @@ const vi = {
     submitting: "ĐANG GỬI...",
     errorGeneric: "Đã có lỗi xảy ra. Vui lòng thử lại.",
     errorNetwork: "Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.",
-    giftButton: "QUÀ CƯỚI",
+    giftButton: "HỘP QUÀ CƯỚI",
     giftAria: "Mở hộp mừng cưới",
+    giftFabLabel: "Hộp quà cưới",
   },
   wishingWell: {
     heading: "Hộp Mừng Cưới",
@@ -271,8 +272,9 @@ const en: Dictionary = {
     submitting: "SENDING...",
     errorGeneric: "Something went wrong. Please try again.",
     errorNetwork: "Couldn't connect. Please check your network and try again.",
-    giftButton: "WEDDING GIFT",
+    giftButton: "WEDDING GIFT BOX",
     giftAria: "Open the wedding gift box",
+    giftFabLabel: "Wedding gift",
   },
   wishingWell: {
     heading: "Wedding Gift",

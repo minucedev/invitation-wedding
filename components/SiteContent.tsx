@@ -9,6 +9,7 @@ import Rsvp from "@/components/Rsvp";
 import Footer from "@/components/Footer";
 import PageFade from "@/components/PageFade";
 import MusicPlayer from "@/components/MusicPlayer";
+import GiftFab from "@/components/GiftFab";
 import WishesToast from "@/components/WishesToast";
 import EnvelopeIntro from "@/components/EnvelopeIntro";
 import type { Locale } from "@/lib/i18n";
@@ -32,6 +33,7 @@ export default function SiteContent({ lang }: { lang: Locale }) {
         <Rsvp lang={lang} />
       </main>
       <Footer lang={lang} />
+      <GiftFab lang={lang} />
       <MusicPlayer lang={lang} />
       <WishesToast lang={lang} />
     </PageFade>

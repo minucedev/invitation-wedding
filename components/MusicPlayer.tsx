@@ -83,7 +83,7 @@ export default function MusicPlayer({ lang }: { lang: Locale }) {
         onClick={toggle}
         aria-label={playing ? t.pause : t.play}
         aria-pressed={playing}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-custom-light/90 backdrop-blur-md border border-custom-gold shadow-lg flex items-center justify-center text-custom-burgundy hover:bg-custom-gold/10 transition-colors duration-300"
+        className="fab-medallion fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-custom-light flex items-center justify-center text-custom-burgundy hover:bg-custom-gold/10 hover:scale-105 transition-transform duration-300"
       >
         {playing && (
           <span className="absolute inset-0 rounded-full border border-custom-gold animate-pulse-slow opacity-50"></span>
