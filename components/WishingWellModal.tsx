@@ -3,8 +3,12 @@
 import { useEffect } from "react";
 import { getDict, type Locale } from "@/lib/i18n";
 
-const QR_SRC = "/images/qr-vietqr.png";
-const QR_FILENAME = "qr-mung-cuoi-thanh-tuan.png";
+// QR image + download filename per account, matched by index to
+// wishingWell.accounts in the dictionary ([0] = bride/Thanh, [1] = groom/Tuấn).
+const QR_CONFIG = [
+  { src: "/images/qr-vietqr.png", filename: "qr-mung-cuoi-thanh.png" },
+  { src: "/images/qr-vietqr-tuan.png", filename: "qr-mung-cuoi-tuan.png" },
+];
 
 export default function WishingWellModal({
   open,
@@ -31,11 +35,11 @@ export default function WishingWellModal({
   // object-URL download; if everything fails we open the image so it's still
   // reachable. NOTE: revoke is delayed — revoking immediately kills the download
   // navigation on mobile.
-  const downloadQR = async () => {
+  const downloadQR = async (src: string, filename: string) => {
     try {
-      const res = await fetch(QR_SRC);
+      const res = await fetch(src);
       const blob = await res.blob();
-      const file = new File([blob], QR_FILENAME, {
+      const file = new File([blob], filename, {
         type: blob.type || "image/png",
       });
 
@@ -52,13 +56,13 @@ export default function WishingWellModal({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = QR_FILENAME;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch {
-      window.open(QR_SRC, "_blank", "noopener,noreferrer");
+      window.open(src, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -70,7 +74,7 @@ export default function WishingWellModal({
       onClick={onClose}
     >
       <div
-        className="bg-custom-light p-8 md:p-12 max-w-md w-full border border-custom-gold relative"
+        className="bg-custom-light p-8 md:p-12 max-w-2xl w-full border border-custom-gold relative max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -86,41 +90,50 @@ export default function WishingWellModal({
         <p className="font-body-md text-body-md text-on-surface-variant text-center mb-8">
           {t.body}
         </p>
-        <div className="bg-surface-container-low p-6 text-center border border-custom-gold/30">
-          <p className="font-label-caps text-label-caps mb-2 text-custom-burgundy">
-            {t.transferInfo}
-          </p>
-          <p className="font-body-md text-primary font-medium">
-            {t.bank}
-          </p>
-          <p className="font-body-md text-primary font-medium">
-            {t.accountNumber}
-          </p>
-          <p className="font-body-md text-primary font-medium mb-4">
-            {t.accountName}
-          </p>
-          {/* Tap the QR itself to download too — same action as the button. */}
-          <button
-            type="button"
-            onClick={downloadQR}
-            aria-label={t.qrAria}
-            className="group block mx-auto cursor-pointer"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt={t.qrAlt}
-              className="w-44 h-44 mx-auto transition-transform duration-300 group-hover:scale-[1.03] group-active:scale-100"
-              src={QR_SRC}
-            />
-          </button>
-          <button
-            type="button"
-            onClick={downloadQR}
-            className="mt-4 inline-flex items-center gap-2 px-5 py-2 border border-custom-gold text-custom-burgundy hover:bg-custom-burgundy hover:text-custom-gold hover:border-custom-gold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-300 font-label-caps text-label-caps cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[18px]">download</span>
-            {t.downloadQR}
-          </button>
+        <div className="grid gap-6 md:grid-cols-2">
+          {t.accounts.map((acc, i) => {
+            const qr = QR_CONFIG[i];
+            return (
+              <div
+                key={acc.accountNumber}
+                className="bg-surface-container-low p-6 text-center border border-custom-gold/30 flex flex-col"
+              >
+                <p className="font-label-caps text-label-caps mb-2 text-custom-burgundy">
+                  {acc.label}
+                </p>
+                <p className="font-body-md text-primary font-medium">
+                  {acc.accountNumber}
+                </p>
+                <p className="font-body-md text-primary font-medium mb-4">
+                  {acc.accountName}
+                </p>
+                {/* Tap the QR itself to download too — same action as the button. */}
+                <button
+                  type="button"
+                  onClick={() => downloadQR(qr.src, qr.filename)}
+                  aria-label={t.qrAria}
+                  className="group block mx-auto cursor-pointer mt-auto"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={t.qrAlt}
+                    className="w-44 h-44 mx-auto transition-transform duration-300 group-hover:scale-[1.03] group-active:scale-100"
+                    src={qr.src}
+                  />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => downloadQR(qr.src, qr.filename)}
+                  className="mt-4 inline-flex items-center justify-center gap-2 px-5 py-2 border border-custom-gold text-custom-burgundy hover:bg-custom-burgundy hover:text-custom-gold hover:border-custom-gold hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all duration-300 font-label-caps text-label-caps cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    download
+                  </span>
+                  {t.downloadQR}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
