@@ -23,16 +23,31 @@ export default function EventActions({
   const t = getDict(lang).eventActions;
   const [mapOpen, setMapOpen] = useState(false);
 
+  // Events held at a private residence ("Tư gia") carry no address, so they show
+  // no map — only the calendar action.
+  const hasMap = Boolean(event.address);
+
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-      <button type="button" className={ACTION} onClick={() => setMapOpen(true)}>
-        <span className="material-symbols-outlined text-base leading-none">
-          place
-        </span>
-        <span className={LABEL}>{t.map}</span>
-      </button>
+      {hasMap && (
+        <>
+          <button
+            type="button"
+            className={ACTION}
+            onClick={() => setMapOpen(true)}
+          >
+            <span className="material-symbols-outlined text-base leading-none">
+              place
+            </span>
+            <span className={LABEL}>{t.map}</span>
+          </button>
 
-      <span aria-hidden className="hidden sm:block h-3 w-px bg-custom-gold/40" />
+          <span
+            aria-hidden
+            className="hidden sm:block h-3 w-px bg-custom-gold/40"
+          />
+        </>
+      )}
 
       <a
         className={ACTION}
@@ -46,12 +61,14 @@ export default function EventActions({
         <span className={LABEL}>{t.addCalendar}</span>
       </a>
 
-      <MapModal
-        event={event}
-        open={mapOpen}
-        onClose={() => setMapOpen(false)}
-        lang={lang}
-      />
+      {hasMap && (
+        <MapModal
+          event={event}
+          open={mapOpen}
+          onClose={() => setMapOpen(false)}
+          lang={lang}
+        />
+      )}
     </div>
   );
 }

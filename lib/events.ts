@@ -54,15 +54,36 @@ type EventBase = {
   en: LocalizedEvent;
 };
 
-// Nhà trai venue — reused by both groom-side events (address is locale-invariant).
-const NHA_TRAI_ADDRESS = "29 Nguyễn Trãi, Xã Krông Ana, Tỉnh Đắk Lắk, Việt Nam";
-
 const eventBases: EventBase[] = [
   // ───────── NHÀ GÁI — 18.07.2026, TP. Huế ─────────
   {
+    id: "le-dinh-hon",
+    side: "bride",
+    // Tư gia — địa chỉ riêng, không hiển thị bản đồ (address rỗng ẩn nút map).
+    address: "",
+    // 08:40 (+07) -> 01:40 UTC, ends 09:00 (+07) -> 02:00 UTC
+    startUTC: "20260718T014000Z",
+    endUTC: "20260718T020000Z",
+    vi: {
+      title: "Lễ Đính Hôn",
+      displayTime: "08:40 Sáng",
+      displayDate: "THỨ BẢY, 18.07.2026",
+      lunarDate: "05 THÁNG 06 NĂM BÍNH NGỌ",
+      locationDetail: "Được cử hành tại tư gia",
+    },
+    en: {
+      title: "Engagement Ceremony",
+      displayTime: "8:40 AM",
+      displayDate: "SATURDAY, JULY 18, 2026",
+      lunarDate: "LUNAR: DAY 5, MONTH 6 (BÍNH NGỌ)",
+      locationDetail: "Private residence",
+    },
+  },
+  {
     id: "le-vu-quy",
     side: "bride",
-    address: "Số 1 Chu Mạnh Trinh, Phường Phú Xuân, Thành Phố Huế, Việt Nam",
+    // Tư gia — địa chỉ riêng, không hiển thị bản đồ.
+    address: "",
     // 09:00 (+07) -> 02:00 UTC, ends 11:00 (+07) -> 04:00 UTC
     startUTC: "20260718T020000Z",
     endUTC: "20260718T040000Z",
@@ -71,14 +92,14 @@ const eventBases: EventBase[] = [
       displayTime: "09:00 Sáng",
       displayDate: "THỨ BẢY, 18.07.2026",
       lunarDate: "05 THÁNG 06 NĂM BÍNH NGỌ",
-      locationDetail: "Chu Mạnh Trinh, P. Phú Xuân, TP. Huế",
+      locationDetail: "Được cử hành tại tư gia",
     },
     en: {
       title: "Bride's Farewell Ceremony",
       displayTime: "9:00 AM",
       displayDate: "SATURDAY, JULY 18, 2026",
       lunarDate: "LUNAR: DAY 5, MONTH 6 (BÍNH NGỌ)",
-      locationDetail: "Chu Mạnh Trinh, Phú Xuân Ward, Huế City",
+      locationDetail: "Private residence",
     },
   },
   {
@@ -111,7 +132,8 @@ const eventBases: EventBase[] = [
   {
     id: "le-thanh-hon",
     side: "groom",
-    address: NHA_TRAI_ADDRESS,
+    // Tư gia — địa chỉ riêng, không hiển thị bản đồ.
+    address: "",
     // 10:00 (+07) -> 03:00 UTC, ends 11:00 (+07) -> 04:00 UTC
     startUTC: "20260724T030000Z",
     endUTC: "20260724T040000Z",
@@ -120,15 +142,14 @@ const eventBases: EventBase[] = [
       displayTime: "10:00 Sáng",
       displayDate: "THỨ SÁU, 24.07.2026",
       lunarDate: "11 THÁNG 06 NĂM BÍNH NGỌ",
-      // Venue name hidden; house number dropped (display only — `address` drives Maps).
-      locationDetail: "Nguyễn Trãi, Xã Krông Ana, Tỉnh Đắk Lắk",
+      locationDetail: "Được cử hành tại tư gia",
     },
     en: {
       title: "Wedding Ceremony",
       displayTime: "10:00 AM",
       displayDate: "FRIDAY, JULY 24, 2026",
       lunarDate: "LUNAR: DAY 11, MONTH 6 (BÍNH NGỌ)",
-      locationDetail: "Nguyễn Trãi, Krông Ana Commune, Đắk Lắk Province",
+      locationDetail: "Private residence",
     },
   },
   {
